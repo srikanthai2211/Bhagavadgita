@@ -1,6 +1,7 @@
 import type { Verse, VerseTag, Chapter, QuizQuestion } from './types';
 import { chapterMeta } from './chapterMeta';
 import { chapterQuizData } from './quizData';
+import { verseDatabase } from './verseDatabase';
 
 // Curated authentic content for the most well-known and important verses.
 // Key: "chapter.verse" (e.g. "2.47")
@@ -670,7 +671,7 @@ function sanskritFor(chapter: number, verse: number): string {
 
 function buildVerse(chapter: number, verse: number, teluguTheme: string, baseTags: VerseTag[]): Verse {
   const key = `${chapter}.${verse}`;
-  const c = curated[key];
+  const c = verseDatabase[key] ?? curated[key];
   if (c) {
     return {
       verseNumber: verse,
