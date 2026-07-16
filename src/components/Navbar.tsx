@@ -6,8 +6,9 @@ import { navigate, useRouter } from '../hooks/useRouter';
 const navItems = [
   { label: 'Home', path: '/' },
   { label: 'Chapters', path: '/chapters' },
+  { label: 'The Story', path: '/story' },
+  { label: 'Glossary', path: '/glossary' },
   { label: 'Progress', path: '/progress' },
-  { label: 'Bookmarks', path: '/bookmarks' },
   { label: 'Quiz', path: '/quiz' },
   { label: 'Ask Gita AI', path: '/ask-gita' },
   { label: 'About', path: '/about' },

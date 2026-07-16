@@ -1,8 +1,9 @@
-import { Sparkles, BookOpen, Brain, Heart, Shield, Compass, Eye, Target, Flame, Award, Users, ChevronRight, Sun, ListChecks } from 'lucide-react';
+import { Sparkles, BookOpen, Brain, Heart, Shield, Compass, Eye, Target, Flame, Award, Users, ChevronRight, Sun, ListChecks, BookMarked } from 'lucide-react';
 import { VerseOfTheDay } from '../components/VerseOfTheDay';
 import { ChapterArtwork } from '../components/ChapterArtwork';
 import { ProgressRing } from '../components/ProgressRing';
 import { Badge } from '../components/Badge';
+import { StreakWidget } from '../components/StreakWidget';
 import { chapters } from '../data/gita';
 import { heroImages } from '../data/chapterImages';
 import { useProgress } from '../hooks/useProgress';
@@ -73,13 +74,11 @@ export function LandingPage() {
                 Start Learning
               </button>
               <button
-                onClick={() => {
-                  if (progress.state.lastChapter) navigate(`/chapter/${progress.state.lastChapter}`);
-                  else navigate('/chapters');
-                }}
-                className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white font-semibold border border-white/30 hover:bg-white/20 transition-all focus-ring"
+                onClick={() => navigate('/story')}
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white font-semibold border border-white/30 hover:bg-white/20 transition-all focus-ring flex items-center justify-center gap-2"
               >
-                Continue Learning
+                <BookMarked className="h-4 w-4" />
+                New? Read the story first
               </button>
             </div>
 
@@ -234,6 +233,55 @@ export function LandingPage() {
       {/* Verse of the Day */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <VerseOfTheDay />
+      </section>
+
+      {/* Streak + Quick Links */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <StreakWidget />
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => navigate('/story')}
+              className="rounded-2xl bg-gradient-to-br from-cosmic-50 to-peacock-50/50 dark:from-cosmic-950/30 dark:to-peacock-950/20 border border-cosmic-200/60 dark:border-cosmic-800/40 p-4 text-left hover:shadow-premium transition-shadow group"
+            >
+              <div className="text-2xl mb-2">📖</div>
+              <div className="font-display text-sm font-semibold text-ink-900 dark:text-ink-50 group-hover:text-cosmic-600 dark:group-hover:text-cosmic-400 transition-colors">
+                The Story
+              </div>
+              <div className="text-xs text-ink-400 mt-0.5">Who is Arjuna?</div>
+            </button>
+            <button
+              onClick={() => navigate('/glossary')}
+              className="rounded-2xl bg-gradient-to-br from-marigold-50 to-saffron-50/50 dark:from-marigold-950/30 dark:to-saffron-950/20 border border-marigold-200/60 dark:border-marigold-800/40 p-4 text-left hover:shadow-premium transition-shadow group"
+            >
+              <div className="text-2xl mb-2">🪷</div>
+              <div className="font-display text-sm font-semibold text-ink-900 dark:text-ink-50 group-hover:text-saffron-600 dark:group-hover:text-saffron-400 transition-colors">
+                Glossary
+              </div>
+              <div className="text-xs text-ink-400 mt-0.5">Key Sanskrit terms</div>
+            </button>
+            <button
+              onClick={() => navigate('/quiz')}
+              className="rounded-2xl bg-gradient-to-br from-peacock-50 to-cosmic-50/50 dark:from-peacock-950/30 dark:to-cosmic-950/20 border border-peacock-200/60 dark:border-peacock-800/40 p-4 text-left hover:shadow-premium transition-shadow group"
+            >
+              <div className="text-2xl mb-2">🧠</div>
+              <div className="font-display text-sm font-semibold text-ink-900 dark:text-ink-50 group-hover:text-peacock-600 dark:group-hover:text-peacock-400 transition-colors">
+                Quiz
+              </div>
+              <div className="text-xs text-ink-400 mt-0.5">Test yourself</div>
+            </button>
+            <button
+              onClick={() => navigate('/progress')}
+              className="rounded-2xl bg-gradient-to-br from-lotus-50 to-peacock-50/50 dark:from-lotus-950/30 dark:to-peacock-950/20 border border-lotus-200/60 dark:border-lotus-800/40 p-4 text-left hover:shadow-premium transition-shadow group"
+            >
+              <div className="text-2xl mb-2">📊</div>
+              <div className="font-display text-sm font-semibold text-ink-900 dark:text-ink-50 group-hover:text-lotus-600 dark:group-hover:text-lotus-400 transition-colors">
+                Progress
+              </div>
+              <div className="text-xs text-ink-400 mt-0.5">Your journey</div>
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* Quiz teaser */}

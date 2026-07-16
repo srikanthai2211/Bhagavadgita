@@ -13,6 +13,8 @@ import { SearchPage } from './pages/SearchPage';
 import { MentorPage } from './pages/MentorPage';
 import { AskGitaPage } from './pages/AskGitaPage';
 import { AboutPage } from './pages/AboutPage';
+import { StoryPrimerPage } from './pages/StoryPrimerPage';
+import { GlossaryPage } from './pages/GlossaryPage';
 
 function App() {
   const { route } = useRouter();
@@ -44,6 +46,8 @@ function App() {
     if (path === '/mentor') return <MentorPage />;
     if (path === '/ask-gita') return <AskGitaPage />;
     if (path === '/about') return <AboutPage />;
+    if (path === '/story') return <StoryPrimerPage />;
+    if (path === '/glossary') return <GlossaryPage />;
 
     // 404
     return (

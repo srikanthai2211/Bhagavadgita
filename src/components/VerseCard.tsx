@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Bookmark, BookmarkCheck, CheckCircle2, Circle, Copy, Share2, StickyNote, ChevronDown, ChevronUp } from 'lucide-react';
+import { Bookmark, BookmarkCheck, CheckCircle2, Circle, Copy, StickyNote, ChevronDown, ChevronUp } from 'lucide-react';
 import type { Verse, LanguageMode } from '../data/types';
 import { useProgress } from '../hooks/useProgress';
 import { VoicePlayer } from './VoicePlayer';
+import { ShareSloka } from './ShareSloka';
+import { AskKrishna } from './AskKrishna';
 
 interface VerseCardProps {
   verse: Verse;
@@ -184,13 +186,8 @@ export function VerseCard({ verse, chapterNumber, langMode, showExplanation, onT
             <Copy className="h-3.5 w-3.5" />
             {copied ? 'Copied!' : 'Copy'}
           </button>
-          <button
-            onClick={handleShare}
-            className="flex items-center gap-1.5 text-xs text-ink-500 dark:text-ink-400 hover:text-saffron-600 dark:hover:text-saffron-400 px-2 py-1.5 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors focus-ring"
-          >
-            <Share2 className="h-3.5 w-3.5" />
-            Share
-          </button>
+          <ShareSloka verse={verse} chapterNumber={chapterNumber} />
+          <AskKrishna verse={verse} chapterNumber={chapterNumber} />
         </div>
 
         {showNotes && (
