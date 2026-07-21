@@ -4,12 +4,20 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      borderColor: {
+        DEFAULT: 'hsl(var(--border))',
+      },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         telugu: ['"Noto Sans Telugu"', '"Noto Serif Telugu"', 'sans-serif'],
         display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
       },
       colors: {
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+        border: 'hsl(var(--border))',
         saffron: {
           50: '#fff8ed',
           100: '#ffefd3',

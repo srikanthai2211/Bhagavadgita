@@ -6,7 +6,9 @@ export type SpeechStatus = 'idle' | 'speaking' | 'paused' | 'error' | 'unsupport
 const langCfg: Record<SpeechLang, { bcp47: string; altLang: string; rate: number; googleLang: string }> = {
   sanskrit: { bcp47: 'hi-IN', altLang: 'hi',    rate: 0.78, googleLang: 'hi' },
   telugu:   { bcp47: 'te-IN', altLang: 'te',    rate: 0.82, googleLang: 'te' },
-  english:  { bcp47: 'en-US', altLang: 'en-GB', rate: 0.92, googleLang: 'en' },
+  // Prefer a native Indian-English voice (e.g. Microsoft Neerja/Prabhat,
+  // Google en-IN, Apple Rishi) over generic en-US/en-GB voices.
+  english:  { bcp47: 'en-IN', altLang: 'en-GB', rate: 0.92, googleLang: 'en' },
 };
 
 // Pick the best available browser voice for the requested language.

@@ -4,6 +4,7 @@ import { ChapterArtwork } from '../components/ChapterArtwork';
 import { ProgressRing } from '../components/ProgressRing';
 import { Badge } from '../components/Badge';
 import { StreakWidget } from '../components/StreakWidget';
+import { SplineSceneBasic } from '../components/SplineSceneDemo';
 import { chapters } from '../data/gita';
 import { heroImages } from '../data/chapterImages';
 import { useProgress } from '../hooks/useProgress';
@@ -440,6 +441,11 @@ export function LandingPage() {
             </button>
           </div>
         </div>
+      </section>
+
+      {/* Interactive 3D showcase */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <SplineSceneBasic />
       </section>
 
       {/* Parent/Mentor teaser */}

@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import type { Plugin } from 'vite';
@@ -67,6 +68,11 @@ function apiRoutesPlugin(): Plugin {
 
 export default defineConfig({
   plugins: [react(), apiRoutesPlugin()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
