@@ -110,7 +110,7 @@ export function ChapterCard({ chapter, progress, quizScore, hasQuiz }: ChapterCa
           e.stopPropagation();
           navigate(`/quiz/${chapter.chapterNumber}`);
         }}
-        className="absolute top-3 right-3 h-8 px-2.5 rounded-full bg-white/90 dark:bg-ink-900/90 backdrop-blur flex items-center gap-1 text-[11px] font-medium text-peacock-600 dark:text-peacock-400 shadow-md hover:bg-peacock-50 dark:hover:bg-peacock-950/60 transition-colors z-10"
+        className="absolute top-3 right-3 h-8 px-2.5 rounded-full bg-white/90 dark:bg-ink-900/90 backdrop-blur flex items-center gap-1 text-[11px] font-medium text-peacock-600 dark:text-peacock-400 shadow-md hover:bg-peacock-50 dark:hover:bg-peacock-950/60 transition-colors z-10 focus-ring"
         aria-label={`Take quiz for Chapter ${chapter.chapterNumber}`}
       >
         <ListChecks className="h-3.5 w-3.5" />

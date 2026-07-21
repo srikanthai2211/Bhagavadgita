@@ -67,7 +67,7 @@ export function Footer() {
                   <li key={link.label}>
                     <button
                       onClick={() => navigate(link.path)}
-                      className="text-sm text-ink-600 dark:text-ink-300 hover:text-saffron-600 dark:hover:text-saffron-400 transition-colors text-left"
+                      className="text-sm text-ink-600 dark:text-ink-300 hover:text-saffron-600 dark:hover:text-saffron-400 transition-colors text-left focus-ring"
                     >
                       {link.label}
                     </button>

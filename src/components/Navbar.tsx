@@ -69,7 +69,7 @@ export function Navbar() {
           <ThemeToggle />
           <button
             onClick={() => setOpen((o) => !o)}
-            className="lg:hidden h-9 w-9 rounded-full bg-ink-100 dark:bg-ink-800 flex items-center justify-center focus-ring"
+            className="lg:hidden h-11 w-11 rounded-full bg-ink-100 dark:bg-ink-800 flex items-center justify-center focus-ring"
             aria-label="Menu"
             aria-expanded={open}
           >

@@ -82,7 +82,7 @@ export function VerseCard({ verse, chapterNumber, langMode, showExplanation, onT
             <button
               onClick={() => progress.toggleBookmark(chapterNumber, verse.verseNumber)}
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
-              className="h-8 w-8 rounded-full hover:bg-ink-100 dark:hover:bg-ink-800 flex items-center justify-center focus-ring transition-colors"
+              className="h-10 w-10 sm:h-9 sm:w-9 rounded-full hover:bg-ink-100 dark:hover:bg-ink-800 flex items-center justify-center focus-ring transition-colors"
             >
               {isBookmarked
                 ? <BookmarkCheck className="h-4 w-4 text-lotus-500" />
@@ -91,7 +91,7 @@ export function VerseCard({ verse, chapterNumber, langMode, showExplanation, onT
             <button
               onClick={() => progress.markRead(chapterNumber, verse.verseNumber)}
               aria-label={isRead ? 'Marked as read' : 'Mark as read'}
-              className="h-8 w-8 rounded-full hover:bg-ink-100 dark:hover:bg-ink-800 flex items-center justify-center focus-ring transition-colors"
+              className="h-10 w-10 sm:h-9 sm:w-9 rounded-full hover:bg-ink-100 dark:hover:bg-ink-800 flex items-center justify-center focus-ring transition-colors"
             >
               {isRead
                 ? <CheckCircle2 className="h-4 w-4 text-peacock-500" />
@@ -105,7 +105,7 @@ export function VerseCard({ verse, chapterNumber, langMode, showExplanation, onT
           <div className="text-[10px] uppercase tracking-widest text-saffron-600 dark:text-saffron-400 font-semibold mb-1.5">
             Sanskrit
           </div>
-          <p className="font-display text-base sm:text-lg text-ink-800 dark:text-ink-100 leading-relaxed whitespace-pre-line">
+          <p className="font-display text-base sm:text-lg text-ink-800 dark:text-ink-100 leading-relaxed whitespace-pre-line prose-measure">
             {verse.sanskrit}
           </p>
         </div>
@@ -116,7 +116,7 @@ export function VerseCard({ verse, chapterNumber, langMode, showExplanation, onT
             <div className="text-[10px] uppercase tracking-widest text-peacock-600 dark:text-peacock-400 font-semibold mb-1.5">
               తెలుగు
             </div>
-            <p className="font-telugu text-base sm:text-lg text-ink-700 dark:text-ink-200 leading-loose">
+            <p className="font-telugu text-base sm:text-lg text-ink-700 dark:text-ink-200 leading-loose prose-measure">
               {verse.telugu}
             </p>
           </div>
@@ -128,7 +128,7 @@ export function VerseCard({ verse, chapterNumber, langMode, showExplanation, onT
             <div className="text-[10px] uppercase tracking-widest text-saffron-600 dark:text-saffron-400 font-semibold mb-1.5">
               English
             </div>
-            <p className="text-base text-ink-700 dark:text-ink-200 leading-relaxed">
+            <p className="text-base text-ink-700 dark:text-ink-200 leading-relaxed prose-measure">
               {verse.english}
             </p>
           </div>

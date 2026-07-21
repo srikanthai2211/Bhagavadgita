@@ -1,4 +1,4 @@
-import { Sparkles, BookOpen, Brain, Heart, Shield, Compass, Eye, Target, Flame, Award, Users, ChevronRight, Sun, ListChecks, BookMarked } from 'lucide-react';
+import { Sparkles, BookOpen, Brain, Heart, Shield, Compass, Eye, Target, Flame, Award, Users, ChevronRight, Sun, ListChecks, BookMarked, Flower2, BarChart3 } from 'lucide-react';
 import { VerseOfTheDay } from '../components/VerseOfTheDay';
 import { ChapterArtwork } from '../components/ChapterArtwork';
 import { ProgressRing } from '../components/ProgressRing';
@@ -242,9 +242,11 @@ export function LandingPage() {
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => navigate('/story')}
-              className="rounded-2xl bg-gradient-to-br from-cosmic-50 to-peacock-50/50 dark:from-cosmic-950/30 dark:to-peacock-950/20 border border-cosmic-200/60 dark:border-cosmic-800/40 p-4 text-left hover:shadow-premium transition-shadow group"
+              className="rounded-2xl bg-gradient-to-br from-cosmic-50 to-peacock-50/50 dark:from-cosmic-950/30 dark:to-peacock-950/20 border border-cosmic-200/60 dark:border-cosmic-800/40 p-4 text-left hover:shadow-premium transition-shadow group focus-ring"
             >
-              <div className="text-2xl mb-2">📖</div>
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-cosmic-400 to-cosmic-600 flex items-center justify-center mb-2">
+                <BookMarked className="h-4.5 w-4.5 text-white" />
+              </div>
               <div className="font-display text-sm font-semibold text-ink-900 dark:text-ink-50 group-hover:text-cosmic-600 dark:group-hover:text-cosmic-400 transition-colors">
                 The Story
               </div>
@@ -252,9 +254,11 @@ export function LandingPage() {
             </button>
             <button
               onClick={() => navigate('/glossary')}
-              className="rounded-2xl bg-gradient-to-br from-marigold-50 to-saffron-50/50 dark:from-marigold-950/30 dark:to-saffron-950/20 border border-marigold-200/60 dark:border-marigold-800/40 p-4 text-left hover:shadow-premium transition-shadow group"
+              className="rounded-2xl bg-gradient-to-br from-marigold-50 to-saffron-50/50 dark:from-marigold-950/30 dark:to-saffron-950/20 border border-marigold-200/60 dark:border-marigold-800/40 p-4 text-left hover:shadow-premium transition-shadow group focus-ring"
             >
-              <div className="text-2xl mb-2">🪷</div>
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-marigold-400 to-saffron-600 flex items-center justify-center mb-2">
+                <Flower2 className="h-4.5 w-4.5 text-white" />
+              </div>
               <div className="font-display text-sm font-semibold text-ink-900 dark:text-ink-50 group-hover:text-saffron-600 dark:group-hover:text-saffron-400 transition-colors">
                 Glossary
               </div>
@@ -262,9 +266,11 @@ export function LandingPage() {
             </button>
             <button
               onClick={() => navigate('/quiz')}
-              className="rounded-2xl bg-gradient-to-br from-peacock-50 to-cosmic-50/50 dark:from-peacock-950/30 dark:to-cosmic-950/20 border border-peacock-200/60 dark:border-peacock-800/40 p-4 text-left hover:shadow-premium transition-shadow group"
+              className="rounded-2xl bg-gradient-to-br from-peacock-50 to-cosmic-50/50 dark:from-peacock-950/30 dark:to-cosmic-950/20 border border-peacock-200/60 dark:border-peacock-800/40 p-4 text-left hover:shadow-premium transition-shadow group focus-ring"
             >
-              <div className="text-2xl mb-2">🧠</div>
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-peacock-400 to-peacock-600 flex items-center justify-center mb-2">
+                <Brain className="h-4.5 w-4.5 text-white" />
+              </div>
               <div className="font-display text-sm font-semibold text-ink-900 dark:text-ink-50 group-hover:text-peacock-600 dark:group-hover:text-peacock-400 transition-colors">
                 Quiz
               </div>
@@ -272,9 +278,11 @@ export function LandingPage() {
             </button>
             <button
               onClick={() => navigate('/progress')}
-              className="rounded-2xl bg-gradient-to-br from-lotus-50 to-peacock-50/50 dark:from-lotus-950/30 dark:to-peacock-950/20 border border-lotus-200/60 dark:border-lotus-800/40 p-4 text-left hover:shadow-premium transition-shadow group"
+              className="rounded-2xl bg-gradient-to-br from-lotus-50 to-peacock-50/50 dark:from-lotus-950/30 dark:to-peacock-950/20 border border-lotus-200/60 dark:border-lotus-800/40 p-4 text-left hover:shadow-premium transition-shadow group focus-ring"
             >
-              <div className="text-2xl mb-2">📊</div>
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-lotus-400 to-lotus-600 flex items-center justify-center mb-2">
+                <BarChart3 className="h-4.5 w-4.5 text-white" />
+              </div>
               <div className="font-display text-sm font-semibold text-ink-900 dark:text-ink-50 group-hover:text-lotus-600 dark:group-hover:text-lotus-400 transition-colors">
                 Progress
               </div>
