@@ -1,4 +1,4 @@
-import { Flame, Calendar, Trophy } from 'lucide-react';
+import { Flame, Trophy } from 'lucide-react';
 import { useProgress } from '../hooks/useProgress';
 
 export function StreakWidget() {

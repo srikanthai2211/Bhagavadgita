@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sparkles, Send, X, Loader2, User, MessageCircle } from 'lucide-react';
+import { Sparkles, Send, X, Loader2, User } from 'lucide-react';
 import type { Verse } from '../data/types';
 
 interface AskKrishnaProps {

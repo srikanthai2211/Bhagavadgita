@@ -1,4 +1,4 @@
-import { Play, Pause, Square, Volume2 } from 'lucide-react';
+import { Play, Pause, Square, Volume2, AlertCircle } from 'lucide-react';
 import { useSpeech, type SpeechLang } from '../hooks/useSpeech';
 
 interface VoicePlayerProps {
@@ -44,43 +44,59 @@ export function VoicePlayer({ sanskrit, telugu, english, explanation }: VoicePla
   if (!supported) return null;
 
   const isActive = status === 'speaking' || status === 'paused';
+  const erroredLang = status === 'error' ? activeLang : null;
 
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
-      <Volume2 className="h-3.5 w-3.5 text-ink-400 flex-shrink-0" />
-      <span className="text-[11px] text-ink-500 dark:text-ink-400 font-medium mr-0.5">Listen:</span>
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <Volume2 className="h-3.5 w-3.5 text-ink-400 flex-shrink-0" />
+        <span className="text-[11px] text-ink-500 dark:text-ink-400 font-medium mr-0.5">Listen:</span>
 
-      {BTNS.map(({ lang, label, short, active, idle }) => {
-        const isThis   = activeLang === lang;
-        const isSpeaking = isThis && status === 'speaking';
-        const isPaused   = isThis && status === 'paused';
-        return (
+        {BTNS.map(({ lang, label, short, active, idle }) => {
+          const isThis   = activeLang === lang;
+          const isSpeaking = isThis && status === 'speaking';
+          const isPaused   = isThis && status === 'paused';
+          const isError    = isThis && status === 'error';
+          return (
+            <button
+              key={lang}
+              onClick={() => speak(buildText(lang, sanskrit, telugu, english, explanation), lang)}
+              aria-label={`${isSpeaking ? 'Pause' : isPaused ? 'Resume' : isError ? 'Retry' : 'Play'} ${label}`}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full border text-[11px] font-medium transition-all ${
+                isError
+                  ? 'bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border-red-300 dark:border-red-800'
+                  : isThis ? active : idle
+              }`}
+            >
+              {isError ? (
+                <AlertCircle className="h-3 w-3" />
+              ) : isSpeaking ? (
+                <Pause className="h-3 w-3" />
+              ) : (
+                <Play className="h-3 w-3" />
+              )}
+              <span className="hidden sm:inline">{label}</span>
+              <span className="sm:hidden">{short}</span>
+            </button>
+          );
+        })}
+
+        {isActive && (
           <button
-            key={lang}
-            onClick={() => speak(buildText(lang, sanskrit, telugu, english, explanation), lang)}
-            aria-label={`${isSpeaking ? 'Pause' : isPaused ? 'Resume' : 'Play'} ${label}`}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-full border text-[11px] font-medium transition-all ${isThis ? active : idle}`}
+            onClick={stop}
+            aria-label="Stop"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-ink-200 dark:border-ink-700 bg-ink-50 dark:bg-ink-800 text-ink-500 dark:text-ink-400 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-500 text-[11px] transition-colors"
           >
-            {isSpeaking ? (
-              <Pause className="h-3 w-3" />
-            ) : (
-              <Play className="h-3 w-3" />
-            )}
-            <span className="hidden sm:inline">{label}</span>
-            <span className="sm:hidden">{short}</span>
+            <Square className="h-3 w-3" />
+            <span className="hidden sm:inline">Stop</span>
           </button>
-        );
-      })}
+        )}
+      </div>
 
-      {isActive && (
-        <button
-          onClick={stop}
-          aria-label="Stop"
-          className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-ink-200 dark:border-ink-700 bg-ink-50 dark:bg-ink-800 text-ink-500 dark:text-ink-400 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-500 text-[11px] transition-colors"
-        >
-          <Square className="h-3 w-3" />
-          <span className="hidden sm:inline">Stop</span>
-        </button>
+      {erroredLang && (
+        <p className="text-[11px] text-red-500 dark:text-red-400">
+          Couldn't play {BTNS.find((b) => b.lang === erroredLang)?.label} audio — check your connection and tap it again to retry.
+        </p>
       )}
     </div>
   );

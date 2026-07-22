@@ -1,7 +1,30 @@
 import path from 'node:path';
+import fs from 'node:fs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import type { Plugin } from 'vite';
+
+// Vite's client-side `import.meta.env` handling doesn't put plain (non
+// VITE_-prefixed) .env vars onto `process.env` for our own dev-server
+// middleware / api/*.ts handlers. Load .env manually so OPENAI_API_KEY etc.
+// are available to `process.env` inside the serverless function handlers.
+function loadDotEnv() {
+  const envPath = path.resolve(__dirname, '.env');
+  if (!fs.existsSync(envPath)) return;
+  for (const line of fs.readFileSync(envPath, 'utf-8').split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eq = trimmed.indexOf('=');
+    if (eq === -1) continue;
+    const key = trimmed.slice(0, eq).trim();
+    let value = trimmed.slice(eq + 1).trim();
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+      value = value.slice(1, -1);
+    }
+    if (!(key in process.env)) process.env[key] = value;
+  }
+}
+loadDotEnv();
 
 // Dev-server middleware that routes /api/* requests to the serverless
 // handlers in the `api/` directory. Without this, Vite's SPA fallback

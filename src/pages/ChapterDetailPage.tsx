@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronRight, BookOpen, Clock, ListChecks, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronRight, BookOpen, Clock, ListChecks, Sparkles, ChevronDown, ChevronUp, ListOrdered } from 'lucide-react';
 import { getChapter, chapters } from '../data/gita';
 import { useProgress } from '../hooks/useProgress';
 import { navigate } from '../hooks/useRouter';
@@ -35,7 +35,15 @@ export function ChapterDetailPage({ chapterNumber }: { chapterNumber: number }) 
   const cp = progress.chapterProgress(chapterNumber);
   const quizScore = progress.chapterQuizScore(chapterNumber);
   const hasQuiz = progress.hasQuiz(chapterNumber);
-  const readingTime = Math.ceil((chapter.verseCount * 1.5) / 60);
+  // Estimate from actual bilingual content (English + explanation) at a
+  // realistic verse-by-verse reading pace, not a flat per-verse constant —
+  // that previously produced absurd results like "72 verses · 2 min read".
+  const wordCount = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
+  const totalWords = chapter.verses.reduce(
+    (sum, v) => sum + wordCount(v.english) + wordCount(v.explanation),
+    0
+  );
+  const readingTime = Math.max(1, Math.round(totalWords / 160));
   const prevChapter = chapters.find((c) => c.chapterNumber === chapterNumber - 1);
   const nextChapter = chapters.find((c) => c.chapterNumber === chapterNumber + 1);
 
@@ -50,6 +58,11 @@ export function ChapterDetailPage({ chapterNumber }: { chapterNumber: number }) 
 
   const expandAll = () => setExpandedVerses(new Set(chapter.verses.map((v) => v.verseNumber)));
   const collapseAll = () => setExpandedVerses(new Set());
+
+  const jumpToVerse = (verseNumber: number) => {
+    const el = document.getElementById(`verse-${chapterNumber}-${verseNumber}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -147,6 +160,30 @@ export function ChapterDetailPage({ chapterNumber }: { chapterNumber: number }) 
           Verses
         </h2>
         <div className="flex items-center gap-2">
+          {/* Jump to verse */}
+          {chapter.verses.length > 8 && (
+            <div className="relative flex items-center gap-1 bg-ink-100 dark:bg-ink-800 rounded-lg px-2 py-1">
+              <ListOrdered className="h-3.5 w-3.5 text-ink-400 flex-shrink-0" />
+              <select
+                aria-label="Jump to verse"
+                defaultValue=""
+                onChange={(e) => {
+                  if (e.target.value) jumpToVerse(Number(e.target.value));
+                  e.target.value = '';
+                }}
+                className="bg-transparent text-xs font-medium text-ink-600 dark:text-ink-300 focus:outline-none cursor-pointer pr-1"
+              >
+                <option value="" disabled>
+                  Jump to verse…
+                </option>
+                {chapter.verses.map((v) => (
+                  <option key={v.verseNumber} value={v.verseNumber}>
+                    Verse {v.verseNumber}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           {/* Language toggle */}
           <div className="flex items-center bg-ink-100 dark:bg-ink-800 rounded-lg p-0.5">
             {(['both', 'english', 'telugu'] as LanguageMode[]).map((m) => (

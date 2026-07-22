@@ -16,6 +16,10 @@
 // If no API key is configured, the route returns a 503 so the frontend can
 // fall back to its built-in offline reply generator.
 
+// This handler uses the Web-standard Request/Response API, so on Vercel it
+// must run as an Edge Function rather than the default Node.js runtime.
+export const config = { runtime: 'edge' };
+
 const DEFAULT_MODEL = 'gpt-4o-mini';
 const DEFAULT_BASE_URL = 'https://api.openai.com/v1';
 

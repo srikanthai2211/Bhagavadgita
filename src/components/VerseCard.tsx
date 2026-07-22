@@ -34,15 +34,6 @@ export function VerseCard({ verse, chapterNumber, langMode, showExplanation, onT
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const handleShare = async () => {
-    const text = `Bhagavad Gita ${chapterNumber}.${verse.verseNumber}: ${verse.english}`;
-    if (navigator.share) {
-      try { await navigator.share({ title: 'Bhagavad Gita', text }); } catch { /* cancelled */ }
-    } else {
-      handleCopy();
-    }
-  };
-
   const saveNote = () => {
     progress.setNote(chapterNumber, verse.verseNumber, noteText);
     setShowNotes(false);

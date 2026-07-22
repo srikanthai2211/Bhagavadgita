@@ -11,8 +11,21 @@ const langCfg: Record<SpeechLang, { bcp47: string; altLang: string; rate: number
   english:  { bcp47: 'en-IN', altLang: 'en-GB', rate: 0.92, googleLang: 'en' },
 };
 
+// Names/lang tags known to be genuine Indian-accented voices across
+// Windows, macOS/iOS, Android and Chrome/Edge voice packs.
+const indianVoiceNames = ['india', 'neerja', 'prabhat', 'ravi', 'veena', 'heera', 'rishi', 'priya', 'lekha'];
+
+function isIndianVoice(v: SpeechSynthesisVoice): boolean {
+  const lang = v.lang.toLowerCase();
+  const name = v.name.toLowerCase();
+  return lang === 'en-in' || lang.startsWith('en-in-') || indianVoiceNames.some((n) => name.includes(n));
+}
+
 // Pick the best available browser voice for the requested language.
 // NEVER falls back to English for non-English content.
+// For English specifically, a genuine Indian-accented voice is always
+// preferred over a "high quality" but wrong-accent voice (e.g. Google US
+// English) — accent correctness outranks generic voice-quality hints.
 function pickVoice(bcp47: string, altLang: string): SpeechSynthesisVoice | undefined {
   const all = window.speechSynthesis.getVoices();
   const primary = bcp47.split('-')[0];
@@ -21,6 +34,8 @@ function pickVoice(bcp47: string, altLang: string): SpeechSynthesisVoice | undef
     all.filter(v => v.lang === lang || v.lang.startsWith(lang + '-'));
 
   const exact = byLang(bcp47);
+  const exactIndian = exact.find(isIndianVoice);
+  if (exactIndian) return exactIndian;
   for (const hint of nativeHints) {
     const v = exact.find(v => v.name.toLowerCase().includes(hint));
     if (v) return v;
@@ -28,6 +43,10 @@ function pickVoice(bcp47: string, altLang: string): SpeechSynthesisVoice | undef
   if (exact.length) return exact[0];
 
   const family = byLang(primary);
+  // Check the whole English family (en-US, en-GB, en-AU, en-IN, ...) for a
+  // genuinely Indian voice BEFORE accepting any other English accent.
+  const familyIndian = family.find(isIndianVoice);
+  if (familyIndian) return familyIndian;
   for (const hint of nativeHints) {
     const v = family.find(v => v.name.toLowerCase().includes(hint));
     if (v) return v;
@@ -43,6 +62,15 @@ function pickVoice(bcp47: string, altLang: string): SpeechSynthesisVoice | undef
 // Check if a native browser voice exists for the given language.
 function hasNativeVoice(bcp47: string, altLang: string): boolean {
   return pickVoice(bcp47, altLang) !== undefined;
+}
+
+// Check specifically for a genuine Indian-accented local voice. Almost every
+// browser ships SOME English voice (e.g. a generic en-US one), so checking
+// "any English voice exists" is the wrong test for this app — it would keep
+// picking a US/UK-accented local voice over the server's real Indian voice.
+function hasIndianVoice(bcp47: string, altLang: string): boolean {
+  const v = pickVoice(bcp47, altLang);
+  return !!v && isIndianVoice(v);
 }
 
 export function useSpeech() {
@@ -96,7 +124,7 @@ export function useSpeech() {
       utt.onpause  = () => setStatus('paused');
       utt.onresume = () => setStatus('speaking');
       utt.onend    = () => { setStatus('idle'); setActiveLang(null); uttRef.current = null; };
-      utt.onerror  = () => { setStatus('error');  setActiveLang(null); uttRef.current = null; };
+      utt.onerror  = () => { setStatus('error'); uttRef.current = null; };
       uttRef.current = utt;
       setStatus('speaking');
       setActiveLang(lang);
@@ -112,6 +140,10 @@ export function useSpeech() {
 
   const speakWithGoogleTTS = useCallback(async (text: string, lang: SpeechLang) => {
     const cfg = langCfg[lang];
+    // Set the target language immediately so an error state can still be
+    // attributed to the right button, even if the request fails before any
+    // audio event fires.
+    setActiveLang(lang);
     try {
       const res = await fetch('/api/tts', {
         method: 'POST',
@@ -127,7 +159,7 @@ export function useSpeech() {
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audioRef.current = audio;
-      audio.onplay = () => { setStatus('speaking'); setActiveLang(lang); };
+      audio.onplay = () => setStatus('speaking');
       audio.onpause = () => setStatus('paused');
       audio.onended = () => {
         setStatus('idle'); setActiveLang(null);
@@ -135,18 +167,19 @@ export function useSpeech() {
         audioRef.current = null;
       };
       audio.onerror = () => {
-        setStatus('error'); setActiveLang(null);
+        setStatus('error');
         URL.revokeObjectURL(url);
         audioRef.current = null;
       };
       await audio.play();
     } catch (err) {
-      // If Google TTS fails, try browser speech as a last resort.
+      // If the server TTS call fails entirely (e.g. offline), fall back to
+      // any local browser voice as a last resort — better a wrong accent
+      // than silence.
       if (supported && hasNativeVoice(cfg.bcp47, cfg.altLang)) {
         speakWithBrowser(text, lang);
       } else {
         setStatus('error');
-        setActiveLang(null);
       }
     }
   }, [supported, speakWithBrowser]);
@@ -175,10 +208,13 @@ export function useSpeech() {
       speakWithGoogleTTS(text, lang);
       return;
     }
-    // For English, use the browser's Web Speech API (reliable, no network).
-    // Fall back to Google TTS only if no browser voice is available.
+    // For English, only use the local browser voice when it is a genuine
+    // Indian-accented one (free, instant, no network). Otherwise prefer the
+    // server TTS route, which (via OpenAI/Azure) can produce a real Indian
+    // English voice — a generic local en-US/en-GB voice is not an acceptable
+    // substitute for this app.
     if (lang === 'english') {
-      if (supported && hasNativeVoice(cfg.bcp47, cfg.altLang)) {
+      if (supported && hasIndianVoice(cfg.bcp47, cfg.altLang)) {
         speakWithBrowser(text, lang);
       } else {
         speakWithGoogleTTS(text, lang);

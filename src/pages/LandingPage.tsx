@@ -9,6 +9,7 @@ import { chapters } from '../data/gita';
 import { heroImages } from '../data/chapterImages';
 import { useProgress } from '../hooks/useProgress';
 import { navigate } from '../hooks/useRouter';
+import { useInView } from '../hooks/useInView';
 
 const benefits = [
   { icon: Brain, title: 'Wisdom', desc: 'Understand life\'s big questions with clarity.', color: 'from-saffron-400 to-saffron-600' },
@@ -24,6 +25,10 @@ const benefits = [
 export function LandingPage() {
   const progress = useProgress();
   const featuredChapters = [1, 2, 3, 6, 11, 18].map((n) => chapters.find((c) => c.chapterNumber === n)!).filter(Boolean);
+  // The 3D scene pulls in several megabytes of Spline runtime chunks — only
+  // mount it (and trigger those downloads) once it's actually scrolled near,
+  // instead of fetching them on every landing-page load.
+  const { ref: splineRef, inView: splineInView } = useInView<HTMLDivElement>();
 
   return (
     <div className="overflow-hidden">
@@ -444,8 +449,12 @@ export function LandingPage() {
       </section>
 
       {/* Interactive 3D showcase */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <SplineSceneBasic />
+      <section ref={splineRef} className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {splineInView ? (
+          <SplineSceneBasic />
+        ) : (
+          <div className="w-full h-[500px] rounded-2xl bg-ink-100 dark:bg-ink-900 border border-ink-100 dark:border-ink-800" />
+        )}
       </section>
 
       {/* Parent/Mentor teaser */}

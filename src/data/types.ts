@@ -28,7 +28,7 @@ export interface Verse {
   tags: VerseTag[];
 }
 
-export type Difficulty = 'easy' | 'medium' | 'reflective';
+export type Difficulty = 'easy' | 'medium' | 'hard' | 'reflective';
 
 export interface QuizQuestion {
   question: string;

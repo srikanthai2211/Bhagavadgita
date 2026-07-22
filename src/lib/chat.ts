@@ -745,8 +745,18 @@ export function offlineReply(userText: string, _context?: ChatContext): string {
     let score = 0;
     for (const kw of theme.keywords) {
       if (kw.includes(' ')) {
-        // Multi-word keyword: substring match is fine
-        if (lower.includes(kw)) score += 2;
+        // Multi-word keyword: match as a bag of words, not an exact phrase.
+        // A question like "What is the Bhagavad Gita?" should still match the
+        // keyword "what is bhagavad gita" even though the user inserted "the"
+        // in the middle — requiring an exact substring was too brittle and
+        // caused the app's own suggested prompts to fail to match anything.
+        if (lower.includes(kw)) {
+          score += 2;
+        } else {
+          const kwWords = kw.split(' ');
+          const allPresent = kwWords.every((w) => new RegExp(`\\b${w}\\b`, 'i').test(userText));
+          if (allPresent) score += 2;
+        }
       } else if (kw.length <= 4) {
         // Short keyword: require word boundary to avoid false hits (e.g. "kind" in "mankind")
         if (new RegExp(`\\b${kw}\\b`, 'i').test(userText)) score += 1;

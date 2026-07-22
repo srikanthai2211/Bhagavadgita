@@ -12,7 +12,14 @@ interface ChapterCardProps {
 
 export function ChapterCard({ chapter, progress, quizScore, hasQuiz }: ChapterCardProps) {
   const isComplete = progress === 100;
-  const readingTime = Math.ceil((chapter.verseCount * 1.5) / 60);
+  // Estimate from actual bilingual content at a realistic reading pace, not a
+  // flat per-verse constant — that previously showed "72 verses · 2 min" here.
+  const wordCount = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
+  const totalWords = chapter.verses.reduce(
+    (sum, v) => sum + wordCount(v.english) + wordCount(v.explanation),
+    0
+  );
+  const readingTime = Math.max(1, Math.round(totalWords / 160));
 
   return (
     <div className="group relative w-full rounded-2xl overflow-hidden bg-white dark:bg-ink-900 border border-ink-200/60 dark:border-ink-800/60 shadow-premium hover:shadow-glow-soft transition-all duration-300 hover:-translate-y-1">
